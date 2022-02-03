@@ -8,12 +8,11 @@ import psycopg2.extras as extras
 
 def main():
     ###########
-    ### PATCH = Carpeta DATA con EXCEL
+    ### PATCH = Excel files in DATA folder
     patchEXC = './out/out_entregas.xlsx'
     columns=['col_DNI','col_ruteado', 'col_estado', 'col_fecha_entrega', 'col_nro_rto', 'col_proveedor']
     table_name = 'Status_roster'
 
-    ### Abrir archivo maestro
     try:
         df = pd.read_excel(patchEXC, names=columns)
     except:
@@ -26,7 +25,7 @@ def main():
 
 def connect_bbdd(df,table_name):
     """
-    Conectarse a la BBDD, BBDD_USER y BBDD_PASS borrados
+    Connect to BBDD, (deleted BBDD_USER y BBDD_PASS)
     """
     conn = psycopg2.connect(
                 host = "localhost",
@@ -74,13 +73,11 @@ def execute_batch(conn, df, table, cols_names, page_size=100):
 
 
 def df_format(df):
-    # Cambiar formato para ser leidos en posgres
+    # Nan -> None (to be used in postgres)
     df['col_nro_rto'] = pd.to_numeric(df['col_nro_rto'], errors='coerce')
     df['col_fecha_entrega'] = pd.to_datetime(df['col_fecha_entrega'], errors='coerce')
     df = df.replace({np.nan: None})
     return df
-
-
 
 
 if __name__ == "__main__":

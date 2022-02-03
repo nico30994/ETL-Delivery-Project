@@ -8,11 +8,10 @@ import psycopg2.extras as extras
 
 def main():
     ###########
-    ### PATCH = Carpeta DATA con EXCEL
+    ### PATCH = Excel files in DATA folder
     patchEXC = 'C:\\Users\\nico_\\Documents\\ETL Entregas\\Excels\\Originales\\add_Roster.xlsx'
     columns=['DNI','Employee_ID','col_name','col_provincia','col_localidad','nombre_calle','altura_direccion','codigo_postal','col_format','col_level','col_mail']
 
-    ### Abrir archivo maestro
     try:
         df = pd.read_excel(patchEXC, names=columns)
     except:
@@ -24,7 +23,7 @@ def main():
 
 def connect_bbdd(df):
     """
-    Conectarse a la BBDD, BBDD_USER y BBDD_PASS borrados
+    Connect to BBDD, (deleted BBDD_USER y BBDD_PASS)
     """
     conn = psycopg2.connect(
                 host = "localhost",
@@ -41,7 +40,7 @@ def connect_bbdd(df):
 
 def execute_batch(conn, df, table, cols_names, page_size=100):
     """
-    Usando psycopg2.extras.execute_batch() se inserta el DataFrame
+    Using psycopg2.extras.execute_batch() to insert the DataFrame
     """
     # Create a list of tupples from the dataframe values
     tuples = [tuple(x) for x in df.to_numpy()]
